@@ -1,0 +1,33 @@
+<%- include ("partials/header"); -%>
+    <div class="admin">
+        <form action="/Admin" method="POST" class="w-50 p-5 bg-light mt-5 mb-5">
+            <div id="w-amount">
+                <label for="amount">Enter customer name</label>
+                <input type="text" class="form-control mb-5 mt-2 p-3" name="name" >
+                <label for="initialDeposit">Enter initial deposit</label>
+                <input type="text" class="form-control mb-5 mt-2 p-3" name="initialDeposit" >
+                <label for="aadhaarNum">Enter Aadhaar number</label>
+                <input type="text" class="form-control mb-5 mt-2 p-3" name="aadhaarNum" >
+                <label for="email">Enter email</label>
+                <input type="email" class="form-control mb-5 mt-2 p-3" name="email" >
+                <button type="button" class="w-100 btn btn-dark" data-bs-toggle="modal" href="#confirmModal2" role="button">Add account</button>
+            </div>
+            <div class="modal fade" id="confirmModal2" aria-hidden="true" aria-labelledby="confirmModalLabel2" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h2 class="modal-title fs-5 text-dark" id="confirmModalLabel">Confirm</h2>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-dark" type="submit">OK</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </form>
+    </div>
+    
+
+
+<%- include ("partials/footer"); -%>

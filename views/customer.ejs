@@ -1,0 +1,154 @@
+<%- include ("partials/header"); -%>
+
+<% if(user.tpass != "#"){ %>
+  <div class="customer d-flex">
+    <div class="dashboard d-flex flex-column p-3 shadow-lg">
+        <a id="1" class="dashboard-links dashboard-links-clicked" href="#"><i id="1" class="fa-solid fa-house"></i>  <span id="1" class="link-text">home</span></a>
+        <a id="2" class="dashboard-links" href="#"><i id="2" class="fa-solid fa-address-card"></i>  <span id="2" class="link-text">withdraw</span></a>
+        <a id="3" class="dashboard-links" href="#"><i id="3" class="fa-solid fa-piggy-bank"></i>  <span id="3" class="link-text">deposit</span></a>
+        <a id="4" class="dashboard-links" href="#"><i id="4" class="fa-solid fa-money-bill-transfer"></i>  <span id="4" class="link-text">money transfer</span></a>
+        <a id="5" href="/Logout" class="dashboard-links d-block d-logout"><i id="5" class="fa-solid fa-right-from-bracket"></i>  <span id="5" class="link-text">Logout</span></a>
+    </div>
+    <div id="home" class=" home" >
+        <h1 class="mt-5">Hello <%= user.name %></h1>
+        <br>
+        <br>
+        <div class="Table bg-light text-dark mb-5 p-5 rounded-3 w-50">
+          <h2>Account Balance</h2>
+          <hr>
+          <h3><%= user.balance %></h3>
+        </div>
+        <div class="Table bg-light text-dark mb-5 p-3 rounded-3 w-50">
+          <h2>Transactions</h2>
+          <hr>
+          
+          <table>
+            <tr>
+              <th>Transacion ID</th>
+              <th>Amount</th>
+              <th>From</th>
+              <th>To</th>
+              <th></th>
+            </tr>
+            <% user.transactions.forEach((t)=>{ %>
+              <tr>
+              <td><%= t.transactionId %></td>
+              <td><%= t.amount %></td>
+              <% let from = ""; %>
+              <% let to = ""; %>
+              <% let transfer = ""; %>
+              <% if(t.from===0){from="Deposit"; to="";}else if(t.to===1){from=""; to="Withdraw";}else {from = t.from;to=t.to} %>
+              <td><%= from %></td>
+              <td><%= to %></td>
+              <% if(t.from===user.username){transfer="Debited";}else{transfer="Credited"} %>
+              <td><%= transfer %></td>
+            </tr>
+            <% }) %>
+          </table>
+        </div>
+    </div>
+    <div id="withdraw" class="home" style="display: none;">
+        <form action="/Withdraw" method="POST" class="w-50 p-5 bg-light">
+            <div id="w-amount">
+                <label for="amount">Enter amount you want to withdraw</label>
+                <input type="number" class="form-control mb-5 mt-2 p-3" name="amount" >
+                <button type="button" class="w-100 btn btn-dark" onclick="withdrawPass()" >Proceed</button>
+            </div>
+            <div id="w-t-pass"style="display: none;">
+                <label for="transaction-password">Enter trasaction password</label>
+                <input type="number" class="form-control mb-5 mt-2 p-3" name="transactionPassword" >
+                <button type="button" class="w-100 btn btn-dark" data-bs-toggle="modal" href="#confirmModal1" role="button">withdraw</button>
+                <a class="w-100 btn btn-dark mt-1" href="/Customer" >cancel</a>
+            </div>
+            <div class="modal fade" id="confirmModal1" aria-hidden="true" aria-labelledby="confirmModalLabel" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h2 class="modal-title fs-5 text-dark" id="confirmModalLabel">Confirm</h2>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-dark" type="submit">OK</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </form>
+    </div>
+
+    <div id="deposit" class="home" style="display: none;">
+        <form action="/Deposit" method="POST" class="w-50 p-5 bg-light">
+            <div id="d-amount">
+                <label for="amount">Enter amount you want to deposit</label>
+                <input type="number" class="form-control mb-5 mt-2 p-3" name="amount" >
+                <button type="button" class="w-100 btn btn-dark" onclick="depositPass()" >Proceed</button>
+            </div>
+            <div id="d-t-pass"style="display: none;">
+                <label for="transaction-password">Enter trasaction password</label>
+                <input type="number" class="form-control mb-5 mt-2 p-3" name="transactionPassword" >
+                <button type="button" class="w-100 btn btn-dark" data-bs-toggle="modal" href="#confirmModal2" role="button">deposit</button>
+                <a class="w-100 btn btn-dark mt-1" href="/Customer" >cancel</a>
+            </div>
+            <div class="modal fade" id="confirmModal2" aria-hidden="true" aria-labelledby="confirmModalLabel" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h2 class="modal-title fs-5 text-dark" id="confirmModalLabel">Confirm</h2>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-dark" type="submit">OK</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </form>
+    </div>
+
+    <div id="transfer" class="home" style="display: none;">
+        <form action="/Transfer" method="POST" class="w-50 p-5 bg-light">
+            <div id="t-amount">
+                <label for="amount">Enter recipient account ID</label>
+                <input type="number" class="form-control mb-1 mt-2 p-3" name="rId" >
+                <label for="amount">Enter amount you want to transfer</label>
+                <input type="number" class="form-control mb-5 mt-2 p-3" name="amount" >
+                <button type="button" class="w-100 btn btn-dark" onclick="transferPass()" >Proceed</button>
+            </div>
+            <div id="t-t-pass"style="display: none;">
+                <label for="transaction-password">Enter trasaction password</label>
+                <input type="number" class="form-control mb-5 mt-2 p-3" name="transactionPassword" >
+                <button type="button" class="w-100 btn btn-dark" data-bs-toggle="modal" href="#confirmModal3" role="button">transfer</button>
+                <a class="w-100 btn btn-dark mt-1" href="/Customer" >cancel</a>
+            </div>
+            <div class="modal fade" id="confirmModal3" aria-hidden="true" aria-labelledby="confirmModalLabel" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h2 class="modal-title fs-5 text-dark" id="confirmModalLabel">Confirm</h2>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-footer">
+                      <button class="btn btn-dark" type="submit">OK</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </form>
+    </div>
+
+</div>
+<% }else{ %>
+  <div class="home">
+    <form action="/Tpin" method="post">
+      <h1>Set your Transaction pin first</h1>
+    <hr>
+    <label for="">Enter new transaction pin (4 digits only)</label>
+    <input type="number" size="4" class="form-control" name="pin">
+    <label for="">Re-enter pin</label>
+    <input type="number" size="4" class="form-control" name="cpin">
+    <button class="btn btn-dark" type="submit">OK</button>
+    </form>
+  </div>
+<% } %>
+
+<%- include ("partials/footer"); -%>
