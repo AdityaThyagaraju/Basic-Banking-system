@@ -7,6 +7,7 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const findOrCreate = require("mongoose-findorcreate");
 const LocalStrategy = require("passport-local").Strategy;
 const nodemailer = require("nodemailer");
+require("dotenv").config();
 const ejs = require("ejs");
 var bcrypt = require("bcrypt");
 
@@ -27,7 +28,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-mongoose.connect("mongodb://127.0.0.1:27017/bankDB", { useNewUrlParser: true });
+mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true });
 
 const transactionSchema = new mongoose.Schema({
   transactionId: Number,
@@ -108,8 +109,8 @@ const tpmailer = nodemailer.createTransport({
   port: 465,
   secure: true,
   auth: {
-    user: "abc",
-    pass: "abc",
+    user: process.env.NODEMAILER_USN,
+    pass: process.env.NODEMAILER_PASS,
   },
 });
 
